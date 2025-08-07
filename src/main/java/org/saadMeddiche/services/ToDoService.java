@@ -1,8 +1,8 @@
 package org.saadMeddiche.services;
 
 import org.saadMeddiche.entities.ToDo;
-import org.saadMeddiche.repositories.ToDoMemoryRepository;
 import org.saadMeddiche.repositories.ToDoRepository;
+import org.saadMeddiche.repositories.impl.ToDoSimpleRepository;
 import org.saadMeddiche.requests.ToDoCreateRequest;
 import org.saadMeddiche.requests.ToDoUpdateRequest;
 
@@ -13,7 +13,7 @@ public class ToDoService {
 
     public static final ToDoService INSTANCE = new ToDoService();
 
-    private final ToDoRepository toDoRepository = ToDoMemoryRepository.INSTANCE;
+    private final ToDoRepository toDoRepository = ToDoSimpleRepository.INSTANCE;
 
     public Optional<ToDo> retrieveById(Long id) {
         return toDoRepository.retrieveById(id);

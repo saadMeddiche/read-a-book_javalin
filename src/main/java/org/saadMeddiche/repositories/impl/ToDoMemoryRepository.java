@@ -1,7 +1,8 @@
-package org.saadMeddiche.repositories;
+package org.saadMeddiche.repositories.impl;
 
-import org.saadMeddiche.entities.NotFoundException;
+import org.saadMeddiche.exceptions.NotFoundException;
 import org.saadMeddiche.entities.ToDo;
+import org.saadMeddiche.repositories.ToDoRepository;
 import org.saadMeddiche.requests.ToDoCreateRequest;
 import org.saadMeddiche.requests.ToDoUpdateRequest;
 
