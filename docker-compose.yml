@@ -1,0 +1,26 @@
+services:
+
+  # PostgreSQL Database
+  database:
+    image: postgres:latest
+    command: ["postgres", "-c", "log_statement=all"]
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=toDoUsingJavalin
+    volumes:
+      - database_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+# Volumes to persist database data
+volumes:
+  database_data:
+
+# Networks for communication
+networks:
+  app-network:
+    driver: bridge
