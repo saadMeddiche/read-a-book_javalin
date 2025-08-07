@@ -1,0 +1,44 @@
+package org.saadMeddiche.controllers;
+
+import io.javalin.Javalin;
+import io.javalin.http.Context;
+import org.saadMeddiche.entities.ToDo;
+import org.saadMeddiche.requests.ToDoCreateRequest;
+import org.saadMeddiche.services.ToDoService;
+
+import java.util.List;
+import java.util.Optional;
+
+public class ToDoController {
+
+    private final ToDoService toDoService = ToDoService.INSTANCE;
+
+    public ToDoController(Javalin app) {
+        app.get("/to-dos/{id}", this::retrieveToDo)
+                .get("/to-dos", this::retrieveAllToDo)
+                .post("/to-dos", this::createToDo);
+    }
+
+    public void retrieveToDo(Context context) {
+
+        long id = Long.parseLong(context.pathParam("id"));
+
+        Optional<ToDo> toDoOptional = toDoService.retrieveById(id);
+
+        toDoOptional.ifPresentOrElse((toDo) -> context.status(200).json(toDo), () -> context.status(404));
+
+    }
+
+    public void retrieveAllToDo(Context context) {
+        List<ToDo> toDos = toDoService.retrieveAll();
+        context.status(200).json(toDos);
+    }
+
+    public void createToDo(Context context) {
+        ToDoCreateRequest request = context.bodyAsClass(ToDoCreateRequest.class);
+        toDoService.create(request);
+        context.status(201);
+    }
+
+
+}
