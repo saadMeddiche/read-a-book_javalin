@@ -1,4 +1,4 @@
-package org.saadMeddiche.entities;
+package org.saadMeddiche.exceptions;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {
