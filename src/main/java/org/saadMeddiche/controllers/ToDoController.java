@@ -18,7 +18,8 @@ public class ToDoController {
         app.get("/to-dos/{id}", this::retrieveToDo)
                 .get("/to-dos", this::retrieveAllToDo)
                 .post("/to-dos", this::createToDo)
-                .put("/to-dos/{id}", this::updateToDo);
+                .put("/to-dos/{id}", this::updateToDo)
+                .delete("/to-dos/{id}", this::deleteToDo);
     }
 
     public void retrieveToDo(Context context) {
@@ -49,5 +50,10 @@ public class ToDoController {
         context.status(204);
     }
 
+    public void deleteToDo(Context context) {
+        long id = Long.parseLong(context.pathParam("id"));
+        toDoService.delete(id);
+        context.status(204);
+    }
 
 }

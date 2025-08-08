@@ -92,6 +92,19 @@ public class ToDoSimpleRepository implements ToDoRepository {
 
     @Override
     public void delete(long id) {
+        try(Connection conn = DriverManager.getConnection(connectionConfiguration.JDBC_URL, connectionConfiguration.JDBC_USER, connectionConfiguration.JDBC_PASSWORD);
+            PreparedStatement stmt = conn.prepareStatement("DELETE FROM todo WHERE id = ?")) {
+
+            stmt.setLong(1, id);
+            int rowsDeleted = stmt.executeUpdate();
+
+            if (rowsDeleted == 0) {
+                throw new SQLException("No ToDo found with id: " + id);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
