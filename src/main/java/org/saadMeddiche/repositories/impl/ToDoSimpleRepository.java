@@ -22,16 +22,14 @@ public class ToDoSimpleRepository implements ToDoRepository {
 
         try(Connection conn = DriverManager.getConnection(connectionConfiguration.JDBC_URL, connectionConfiguration.JDBC_USER, connectionConfiguration.JDBC_PASSWORD);
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM todo WHERE id = ?")) {
-
             stmt.setLong(1, id);
+
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
-                return Optional.of(ToDo.builder()
-                        .id(rs.getLong("id"))
-                        .title(rs.getString("title"))
-                        .description(rs.getString("description"))
-                    .build());
+                return Optional.of(builderToDo(rs));
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -46,13 +44,11 @@ public class ToDoSimpleRepository implements ToDoRepository {
         try (Connection conn = DriverManager.getConnection(connectionConfiguration.JDBC_URL, connectionConfiguration.JDBC_USER, connectionConfiguration.JDBC_PASSWORD);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT * FROM todo")) {
+
             while (rs.next()) {
-                toDos.add(ToDo.builder()
-                            .id(rs.getLong("id"))
-                            .title(rs.getString("title"))
-                            .description(rs.getString("description"))
-                        .build());
+                toDos.add(builderToDo(rs));
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -82,6 +78,14 @@ public class ToDoSimpleRepository implements ToDoRepository {
     @Override
     public void delete(long id) {
 
+    }
+
+    private ToDo builderToDo(ResultSet rs) throws SQLException {
+        return ToDo.builder()
+                .id(rs.getLong("id"))
+                .title(rs.getString("title"))
+                .description(rs.getString("description"))
+                .build();
     }
 
 }
