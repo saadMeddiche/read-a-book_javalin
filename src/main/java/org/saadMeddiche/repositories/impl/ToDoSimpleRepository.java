@@ -20,8 +20,7 @@ public class ToDoSimpleRepository implements ToDoRepository {
     @Override
     public Optional<ToDo> retrieveById(Long id) {
 
-        try(Connection conn = DriverManager.getConnection(connectionConfiguration.JDBC_URL, connectionConfiguration.JDBC_USER, connectionConfiguration.JDBC_PASSWORD);
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM todo WHERE id = ?")) {
+        try(Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM todo WHERE id = ?")) {
             stmt.setLong(1, id);
 
             ResultSet rs = stmt.executeQuery();
@@ -41,9 +40,7 @@ public class ToDoSimpleRepository implements ToDoRepository {
     public List<ToDo> retrieveAll() {
 
         List<ToDo> toDos = new ArrayList<>();
-        try (Connection conn = DriverManager.getConnection(connectionConfiguration.JDBC_URL, connectionConfiguration.JDBC_USER, connectionConfiguration.JDBC_PASSWORD);
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM todo")) {
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery("SELECT * FROM todo")) {
 
             while (rs.next()) {
                 toDos.add(builderToDo(rs));
@@ -58,8 +55,7 @@ public class ToDoSimpleRepository implements ToDoRepository {
 
     @Override
     public void create(ToDoCreateRequest toDoCreateRequest) {
-        try (Connection conn = DriverManager.getConnection(connectionConfiguration.JDBC_URL, connectionConfiguration.JDBC_USER, connectionConfiguration.JDBC_PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement("INSERT INTO todo (title, description) VALUES (?, ?)")) {
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement("INSERT INTO todo (title, description) VALUES (?, ?)")) {
 
             stmt.setString(1, toDoCreateRequest.title());
             stmt.setString(2, toDoCreateRequest.description());
@@ -72,8 +68,7 @@ public class ToDoSimpleRepository implements ToDoRepository {
 
     @Override
     public void update(long id, ToDoUpdateRequest todoUpdateRequest) {
-        try (Connection conn = DriverManager.getConnection(connectionConfiguration.JDBC_URL, connectionConfiguration.JDBC_USER, connectionConfiguration.JDBC_PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement("UPDATE todo SET title = ?, description = ? WHERE id = ?")) {
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement("UPDATE todo SET title = ?, description = ? WHERE id = ?")) {
 
             stmt.setString(1, todoUpdateRequest.title());
             stmt.setString(2, todoUpdateRequest.description());
@@ -92,8 +87,7 @@ public class ToDoSimpleRepository implements ToDoRepository {
 
     @Override
     public void delete(long id) {
-        try(Connection conn = DriverManager.getConnection(connectionConfiguration.JDBC_URL, connectionConfiguration.JDBC_USER, connectionConfiguration.JDBC_PASSWORD);
-            PreparedStatement stmt = conn.prepareStatement("DELETE FROM todo WHERE id = ?")) {
+        try(Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement("DELETE FROM todo WHERE id = ?")) {
 
             stmt.setLong(1, id);
             int rowsDeleted = stmt.executeUpdate();
@@ -106,6 +100,10 @@ public class ToDoSimpleRepository implements ToDoRepository {
             throw new RuntimeException(e);
         }
 
+    }
+
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(connectionConfiguration.JDBC_URL, connectionConfiguration.JDBC_USER, connectionConfiguration.JDBC_PASSWORD);
     }
 
     private ToDo builderToDo(ResultSet rs) throws SQLException {
