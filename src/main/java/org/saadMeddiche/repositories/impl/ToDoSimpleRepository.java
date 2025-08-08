@@ -59,6 +59,7 @@ public class ToDoSimpleRepository implements ToDoRepository {
 
             stmt.setString(1, toDoCreateRequest.title());
             stmt.setString(2, toDoCreateRequest.description());
+
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -73,11 +74,8 @@ public class ToDoSimpleRepository implements ToDoRepository {
             stmt.setString(1, todoUpdateRequest.title());
             stmt.setString(2, todoUpdateRequest.description());
             stmt.setLong(3, id);
-            int rowsUpdated = stmt.executeUpdate();
 
-            if (rowsUpdated == 0) {
-                throw new SQLException("No ToDo found with id: " + id);
-            }
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -90,11 +88,8 @@ public class ToDoSimpleRepository implements ToDoRepository {
         try(Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement("DELETE FROM todo WHERE id = ?")) {
 
             stmt.setLong(1, id);
-            int rowsDeleted = stmt.executeUpdate();
 
-            if (rowsDeleted == 0) {
-                throw new SQLException("No ToDo found with id: " + id);
-            }
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
