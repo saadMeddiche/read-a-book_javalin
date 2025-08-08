@@ -72,6 +72,21 @@ public class ToDoSimpleRepository implements ToDoRepository {
 
     @Override
     public void update(long id, ToDoUpdateRequest todoUpdateRequest) {
+        try (Connection conn = DriverManager.getConnection(connectionConfiguration.JDBC_URL, connectionConfiguration.JDBC_USER, connectionConfiguration.JDBC_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement("UPDATE todo SET title = ?, description = ? WHERE id = ?")) {
+
+            stmt.setString(1, todoUpdateRequest.title());
+            stmt.setString(2, todoUpdateRequest.description());
+            stmt.setLong(3, id);
+            int rowsUpdated = stmt.executeUpdate();
+
+            if (rowsUpdated == 0) {
+                throw new SQLException("No ToDo found with id: " + id);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 

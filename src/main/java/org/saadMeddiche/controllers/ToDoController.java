@@ -4,6 +4,7 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.saadMeddiche.entities.ToDo;
 import org.saadMeddiche.requests.ToDoCreateRequest;
+import org.saadMeddiche.requests.ToDoUpdateRequest;
 import org.saadMeddiche.services.ToDoService;
 
 import java.util.List;
@@ -16,7 +17,8 @@ public class ToDoController {
     public ToDoController(Javalin app) {
         app.get("/to-dos/{id}", this::retrieveToDo)
                 .get("/to-dos", this::retrieveAllToDo)
-                .post("/to-dos", this::createToDo);
+                .post("/to-dos", this::createToDo)
+                .put("/to-dos/{id}", this::updateToDo);
     }
 
     public void retrieveToDo(Context context) {
@@ -38,6 +40,13 @@ public class ToDoController {
         ToDoCreateRequest request = context.bodyAsClass(ToDoCreateRequest.class);
         toDoService.create(request);
         context.status(201);
+    }
+
+    public void updateToDo(Context context) {
+        long id = Long.parseLong(context.pathParam("id"));
+        ToDoUpdateRequest request = context.bodyAsClass(ToDoUpdateRequest.class);
+        toDoService.update(id, request);
+        context.status(204);
     }
 
 
