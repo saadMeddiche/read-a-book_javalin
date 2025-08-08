@@ -19,6 +19,23 @@ public class ToDoSimpleRepository implements ToDoRepository {
 
     @Override
     public Optional<ToDo> retrieveById(Long id) {
+
+        try(Connection conn = DriverManager.getConnection(connectionConfiguration.JDBC_URL, connectionConfiguration.JDBC_USER, connectionConfiguration.JDBC_PASSWORD);
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM todo WHERE id = ?")) {
+
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return Optional.of(ToDo.builder()
+                        .id(rs.getLong("id"))
+                        .title(rs.getString("title"))
+                        .description(rs.getString("description"))
+                    .build());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         return Optional.empty();
     }
 
