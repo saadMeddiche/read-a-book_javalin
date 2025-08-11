@@ -9,12 +9,19 @@ import java.sql.SQLException;
 public class Main {
 
     public static void main(String[] args) throws SQLException {
-        Javalin app = Javalin.create().start(7070);
-        ToDoController controller = new ToDoController(app);
+        Main main = new Main();
+        main.setupDatabaseTable();
+        main.setupEndpoints();
+    }
 
-        TablesInitializer tablesInitializer = new TablesInitializer("org.saadMeddiche.entities");
-        tablesInitializer.initialize();
+    private final Javalin app = Javalin.create().start(7070);
 
+    public void setupDatabaseTable() throws SQLException {
+        new TablesInitializer("org.saadMeddiche.entities");
+    }
+
+    public void setupEndpoints() {
+        new ToDoController(app);
     }
 
 }
