@@ -1,8 +1,8 @@
 package org.saadMeddiche.configurations;
 
-public class DataBaseConnectionConfiguration extends Configuration {
+public class DataBaseConfiguration extends Configuration {
 
-    public static DataBaseConnectionConfiguration INSTANCE = new DataBaseConnectionConfiguration();
+    public static DataBaseConfiguration INSTANCE = new DataBaseConfiguration();
 
     public final String JDBC_URL = prop.getProperty("JDBC_URL");
     public final String JDBC_USER = prop.getProperty("JDBC_USER");

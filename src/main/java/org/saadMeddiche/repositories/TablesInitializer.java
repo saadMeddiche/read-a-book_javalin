@@ -3,7 +3,7 @@ package org.saadMeddiche.repositories;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.saadMeddiche.configurations.DataBaseConnectionConfiguration;
+import org.saadMeddiche.configurations.DataBaseConfiguration;
 import org.saadMeddiche.utils.OrmLiteEntityScanner;
 
 import java.sql.SQLException;
@@ -37,7 +37,7 @@ public class TablesInitializer {
 
     private JdbcPooledConnectionSource createConnectionSource() throws SQLException {
 
-        DataBaseConnectionConfiguration config = DataBaseConnectionConfiguration.INSTANCE;
+        DataBaseConfiguration config = DataBaseConfiguration.INSTANCE;
 
         JdbcPooledConnectionSource connectionSource = new JdbcPooledConnectionSource(config.JDBC_URL);
         connectionSource.setUsername(config.JDBC_USER);

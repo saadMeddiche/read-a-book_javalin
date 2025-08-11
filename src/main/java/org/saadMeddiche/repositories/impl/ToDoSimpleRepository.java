@@ -1,6 +1,6 @@
 package org.saadMeddiche.repositories.impl;
 
-import org.saadMeddiche.configurations.DataBaseConnectionConfiguration;
+import org.saadMeddiche.configurations.DataBaseConfiguration;
 import org.saadMeddiche.entities.ToDo;
 import org.saadMeddiche.repositories.ToDoRepository;
 import org.saadMeddiche.requests.ToDoCreateRequest;
@@ -15,7 +15,7 @@ public class ToDoSimpleRepository implements ToDoRepository {
 
     public static ToDoRepository INSTANCE = new ToDoSimpleRepository();
 
-    private final DataBaseConnectionConfiguration connectionConfiguration = DataBaseConnectionConfiguration.INSTANCE;
+    private final DataBaseConfiguration connectionConfiguration = DataBaseConfiguration.INSTANCE;
 
     @Override
     public Optional<ToDo> retrieveById(Long id) {
