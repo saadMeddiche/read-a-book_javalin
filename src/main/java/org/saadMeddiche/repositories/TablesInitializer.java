@@ -7,6 +7,7 @@ import org.saadMeddiche.configurations.DataBaseConfiguration;
 import org.saadMeddiche.utils.OrmLiteEntityScanner;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -45,6 +46,13 @@ public class TablesInitializer {
 
         return connectionSource;
 
+    }
+
+    // TODO: Implement filtering logic to skip entities that already have a table
+    private List<Class<?>> filterEntitiesThatAlreadyHaveTable(List<Class<?>> entities, JdbcPooledConnectionSource connectionSource) throws SQLException {
+        List<Class<?>> filteredEntities = new ArrayList<>();
+        for (Class<?> entity : entities) {}
+        return filteredEntities;
     }
 
 }
