@@ -3,7 +3,6 @@ package org.saadMeddiche.services;
 import org.saadMeddiche.entities.ToDo;
 import org.saadMeddiche.repositories.ToDoRepository;
 import org.saadMeddiche.repositories.impl.ToDoOrmLiteRepository;
-import org.saadMeddiche.repositories.impl.ToDoSimpleRepository;
 import org.saadMeddiche.requests.ToDoCreateRequest;
 import org.saadMeddiche.requests.ToDoUpdateRequest;
 

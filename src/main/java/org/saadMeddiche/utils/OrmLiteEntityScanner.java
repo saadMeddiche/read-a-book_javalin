@@ -1,9 +1,9 @@
 package org.saadMeddiche.utils;
 
+import com.j256.ormlite.table.DatabaseTable;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
-import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.ArrayList;
 import java.util.List;
