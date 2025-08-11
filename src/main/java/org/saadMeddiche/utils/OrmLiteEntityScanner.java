@@ -13,7 +13,7 @@ public class OrmLiteEntityScanner {
         List<Class<?>> entities = new ArrayList<>();
 
         try (ScanResult scanResult = new ClassGraph()
-                .enableAllInfo()
+                .enableAnnotationInfo()
                 .acceptPackages(packageName)
                 .scan()) {
 
