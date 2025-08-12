@@ -29,4 +29,8 @@ public class User {
     @ForeignCollectionField
     private ForeignCollection<ToDo> toDos;
 
+    public String fullName() {
+        return firstName + " " + lastName;
+    }
+
 }
