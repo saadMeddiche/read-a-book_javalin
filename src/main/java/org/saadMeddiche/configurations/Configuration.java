@@ -1,15 +1,13 @@
 package org.saadMeddiche.configurations;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+@Slf4j
 public abstract class Configuration {
-
-    private static final Logger log = LoggerFactory.getLogger(Configuration.class);
 
     protected Properties prop = new Properties();
 
