@@ -1,4 +1,4 @@
-package org.saadMeddiche.initializeres;
+package org.saadMeddiche.initializers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.saadMeddiche.configurations.PackageConfiguration;

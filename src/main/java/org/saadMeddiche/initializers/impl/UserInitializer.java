@@ -1,7 +1,7 @@
-package org.saadMeddiche.initializeres.impl;
+package org.saadMeddiche.initializers.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.saadMeddiche.initializeres.Initializable;
+import org.saadMeddiche.initializers.Initializable;
 
 @Slf4j
 public class UserInitializer implements Initializable {

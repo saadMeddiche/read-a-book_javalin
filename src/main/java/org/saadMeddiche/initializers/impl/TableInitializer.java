@@ -1,11 +1,11 @@
-package org.saadMeddiche.initializeres.impl;
+package org.saadMeddiche.initializers.impl;
 
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.saadMeddiche.configurations.PackageConfiguration;
-import org.saadMeddiche.initializeres.Initializable;
+import org.saadMeddiche.initializers.Initializable;
 import org.saadMeddiche.utils.ClassScanner;
 import org.saadMeddiche.utils.DatabaseConnectionProvider;
 

@@ -1,4 +1,4 @@
-package org.saadMeddiche.initializeres;
+package org.saadMeddiche.initializers;
 
 @FunctionalInterface
 public interface Initializable {
