@@ -44,7 +44,7 @@ public class ToDoOrmLiteRepository implements ToDoRepository {
     public List<ToDoResponse> retrieveAll() {
         QueryBuilder<User,Long> userQb = userDao.queryBuilder();
         QueryBuilder<ToDo,Long> toDoQb = todoDao.queryBuilder();
-        List<ToDo> toDos = toDoQb.join(userQb).query();
+        List<ToDo> toDos = toDoQb.leftJoin(userQb).query();
         return toDos.stream()
                 .map(toDo -> new ToDoResponse(
                         toDo.id,
