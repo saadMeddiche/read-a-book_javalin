@@ -5,6 +5,8 @@ import org.saadMeddiche.exceptions.NotFoundException;
 import org.saadMeddiche.repositories.ToDoRepository;
 import org.saadMeddiche.requests.ToDoCreateRequest;
 import org.saadMeddiche.requests.ToDoUpdateRequest;
+import org.saadMeddiche.responses.ToDoResponse;
+import org.saadMeddiche.utils.CurrentAuthenticatedUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +24,24 @@ public class ToDoMemoryRepository implements ToDoRepository {
                 .findFirst();
     }
 
-    public List<ToDo> retrieveAll() {
-        return toDos;
+    public List<ToDoResponse> retrieveAll() {
+
+        List<ToDoResponse> toDoResponses = new ArrayList<>();
+
+        for(ToDo toDo : toDos) {
+
+            ToDoResponse toDoResponse = new ToDoResponse(
+                    toDo.id,
+                    toDo.title,
+                    toDo.description,
+                    toDo.user.firstName + " " + toDo.user.lastName
+            );
+
+            toDoResponses.add(toDoResponse);
+        }
+
+        return toDoResponses;
+
     }
 
     public void create(ToDoCreateRequest toDoCreateRequest) {
@@ -31,6 +49,7 @@ public class ToDoMemoryRepository implements ToDoRepository {
         toDo.id = (long) (toDos.size() + 1);
         toDo.title = toDoCreateRequest.title();
         toDo.description = toDoCreateRequest.description();
+        toDo.user = CurrentAuthenticatedUser.retrieve();
         toDos.add(toDo);
     }
 

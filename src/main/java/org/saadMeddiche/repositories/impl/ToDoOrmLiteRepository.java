@@ -2,11 +2,14 @@ package org.saadMeddiche.repositories.impl;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.stmt.QueryBuilder;
 import lombok.SneakyThrows;
 import org.saadMeddiche.entities.ToDo;
+import org.saadMeddiche.entities.User;
 import org.saadMeddiche.repositories.ToDoRepository;
 import org.saadMeddiche.requests.ToDoCreateRequest;
 import org.saadMeddiche.requests.ToDoUpdateRequest;
+import org.saadMeddiche.responses.ToDoResponse;
 import org.saadMeddiche.utils.DatabaseConnectionProvider;
 
 import java.sql.SQLException;
@@ -19,9 +22,12 @@ public class ToDoOrmLiteRepository implements ToDoRepository {
 
     private final Dao<ToDo,Long> todoDao;
 
+    private final Dao<User,Long> userDao;
+
     public ToDoOrmLiteRepository() {
         try {
             todoDao = DaoManager.createDao(DatabaseConnectionProvider.getConnectionSource(), ToDo.class);
+            userDao = DaoManager.createDao(DatabaseConnectionProvider.getConnectionSource(), User.class);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to create DAO for ToDo", e);
         }
@@ -35,8 +41,17 @@ public class ToDoOrmLiteRepository implements ToDoRepository {
 
     @Override
     @SneakyThrows
-    public List<ToDo> retrieveAll() {
-        return todoDao.queryForAll();
+    public List<ToDoResponse> retrieveAll() {
+        QueryBuilder<User,Long> userQb = userDao.queryBuilder();
+        QueryBuilder<ToDo,Long> toDoQb = todoDao.queryBuilder();
+        List<ToDo> toDos = toDoQb.join(userQb).query();
+        return toDos.stream()
+                .map(toDo -> new ToDoResponse(
+                        toDo.id,
+                        toDo.title,
+                        toDo.description,
+                        toDo.user.fullName()
+                )).toList();
     }
 
     @Override

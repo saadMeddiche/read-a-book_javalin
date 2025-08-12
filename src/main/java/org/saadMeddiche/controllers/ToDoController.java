@@ -33,8 +33,7 @@ public class ToDoController {
     }
 
     public void retrieveAllToDo(Context context) {
-        List<ToDo> toDos = toDoService.retrieveAll();
-        context.status(200).json(toDos);
+        context.status(200).json(toDoService.retrieveAll());
     }
 
     public void createToDo(Context context) {

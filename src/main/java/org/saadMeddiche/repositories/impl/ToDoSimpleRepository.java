@@ -4,6 +4,7 @@ import org.saadMeddiche.entities.ToDo;
 import org.saadMeddiche.repositories.ToDoRepository;
 import org.saadMeddiche.requests.ToDoCreateRequest;
 import org.saadMeddiche.requests.ToDoUpdateRequest;
+import org.saadMeddiche.responses.ToDoResponse;
 import org.saadMeddiche.utils.DatabaseConnectionProvider;
 
 import java.sql.*;
@@ -35,19 +36,19 @@ public class ToDoSimpleRepository implements ToDoRepository {
     }
 
     @Override
-    public List<ToDo> retrieveAll() {
+    public List<ToDoResponse> retrieveAll() {
 
-        List<ToDo> toDos = new ArrayList<>();
-        try (Connection conn = DatabaseConnectionProvider.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery("SELECT * FROM todo")) {
+        List<ToDoResponse> toDoResponses = new ArrayList<>();
+        try (Connection conn = DatabaseConnectionProvider.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery("SELECT t.id, t.title, t.description, CONCAT(u.\"firstName\" , ' ', u.\"lastName\") as userFullName FROM todo t LEFT JOIN public.user u on u.id = t.user_id")) {
 
             while (rs.next()) {
-                toDos.add(builderToDo(rs));
+                toDoResponses.add(builderToDoResponse(rs));
             }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return toDos;
+        return toDoResponses;
 
     }
 
@@ -100,6 +101,15 @@ public class ToDoSimpleRepository implements ToDoRepository {
                 .id(rs.getLong("id"))
                 .title(rs.getString("title"))
                 .description(rs.getString("description"))
+                .build();
+    }
+
+    private ToDoResponse builderToDoResponse(ResultSet rs) throws SQLException {
+        return ToDoResponse.builder()
+                .id(rs.getLong("id"))
+                .title(rs.getString("title"))
+                .description(rs.getString("description"))
+                .userFullName(rs.getString("userFullName"))
                 .build();
     }
 

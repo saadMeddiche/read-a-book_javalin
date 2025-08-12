@@ -2,9 +2,10 @@ package org.saadMeddiche.services;
 
 import org.saadMeddiche.entities.ToDo;
 import org.saadMeddiche.repositories.ToDoRepository;
-import org.saadMeddiche.repositories.impl.ToDoOrmLiteRepository;
+import org.saadMeddiche.repositories.impl.ToDoSimpleRepository;
 import org.saadMeddiche.requests.ToDoCreateRequest;
 import org.saadMeddiche.requests.ToDoUpdateRequest;
+import org.saadMeddiche.responses.ToDoResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,13 +14,13 @@ public class ToDoService {
 
     public static final ToDoService INSTANCE = new ToDoService();
 
-    private final ToDoRepository toDoRepository = ToDoOrmLiteRepository.INSTANCE;
+    private final ToDoRepository toDoRepository = ToDoSimpleRepository.INSTANCE;
 
     public Optional<ToDo> retrieveById(Long id) {
         return toDoRepository.retrieveById(id);
     }
 
-    public List<ToDo> retrieveAll() {
+    public List<ToDoResponse> retrieveAll() {
         return toDoRepository.retrieveAll();
     }
 
