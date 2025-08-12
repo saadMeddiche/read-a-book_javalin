@@ -9,6 +9,8 @@ import org.saadMeddiche.initializers.Initializable;
 import org.saadMeddiche.utils.ClassScanner;
 import org.saadMeddiche.utils.DatabaseConnectionProvider;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +38,6 @@ public class TableInitializer implements Initializable {
 
         log.info("Initializing database tables for package: {}", entityPackage);
 
-        log.info("Creating connection source...");
-        ConnectionSource connectionSource = DatabaseConnectionProvider.getConnectionSource();
-
         log.info("Scanning for entities in package: {}", entityPackage);
         List<Class<?>> entities = ClassScanner.findClassesByPackageAndAnnotation(entityPackage, DatabaseTable.class);
 
@@ -47,19 +46,48 @@ public class TableInitializer implements Initializable {
             return;
         }
 
-        log.info("Found {} entities in package: {}", entities.size(), entityPackage);
-        for (Class<?> entity : entities) {
+        log.info("Filtering entities that already have tables...");
+        List<Class<?>> filteredEntities = filterEntitiesThatAlreadyHaveTable(entities);
+
+        if (filteredEntities.isEmpty()) {
+            log.info("All entities already have tables, skipping initialization.");
+            return;
+        }
+
+        log.info("Creating connection source...");
+        ConnectionSource connectionSource = DatabaseConnectionProvider.getConnectionSource();
+
+        log.info("Found {} entities to initialize tables for in package: {}", filteredEntities.size(), entityPackage);
+        for (Class<?> entity : filteredEntities) {
             TableUtils.createTableIfNotExists(connectionSource, entity);
             log.info("Initialized table for: {}", entity.getSimpleName());
         }
 
     }
 
-    // TODO: Implement filtering logic to skip entities that already have a table
-    private List<Class<?>> filterEntitiesThatAlreadyHaveTable(List<Class<?>> entities, ConnectionSource connectionSource) throws SQLException {
+    private List<Class<?>> filterEntitiesThatAlreadyHaveTable(List<Class<?>> entities) throws SQLException {
         List<Class<?>> filteredEntities = new ArrayList<>();
-        for (Class<?> entity : entities) {}
+        for (Class<?> entity : entities) {
+             String table = entity.getAnnotation(DatabaseTable.class).tableName();
+
+            if (!isTableExists(table)) {
+                filteredEntities.add(entity);
+                log.info("Entity {} does not have a table, adding to initialization list.", entity.getSimpleName());
+            }
+
+        }
         return filteredEntities;
+    }
+
+    // TODO: FIX THE QUERY
+    private boolean isTableExists(String tableName) throws SQLException {
+        try(Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement ("SELECT 1 FROM ? LIMIT 1")) {
+            stmt.setString(1, tableName);
+            return stmt.execute();
+        } catch (SQLException e) {
+            log.warn("Table {} does not exist: {}", tableName, e.getMessage());
+            return false;
+        }
     }
 
 }
