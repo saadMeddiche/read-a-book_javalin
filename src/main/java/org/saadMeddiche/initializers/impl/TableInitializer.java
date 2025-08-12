@@ -27,6 +27,11 @@ public class TableInitializer implements Initializable {
         }
     }
 
+    @Override
+    public boolean isInitialized() {
+        return false;
+    }
+
     private void startProcess() throws SQLException {
 
         log.info("Initializing database tables for package: {}", entityPackage);

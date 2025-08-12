@@ -22,6 +22,12 @@ public class Launcher {
 
                 Initializable initializable = (Initializable) clazz.getDeclaredConstructor().newInstance();
                 log.info("Initializing class: {}.", clazz.getName());
+
+                if(initializable.isInitialized()) {
+                    log.info("Class {} is already initialized, skipping.", clazz.getName());
+                    continue;
+                }
+
                 initializable.initialize();
 
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {

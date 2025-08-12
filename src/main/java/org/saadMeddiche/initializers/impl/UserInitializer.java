@@ -14,11 +14,16 @@ public class UserInitializer implements Initializable {
     @Override
     public void initialize() {
 
-        UserCreateRequest userCreateRequest = new UserCreateRequest("Bob","Callahan","TheBob","bobCallahan@gmail.com","password123");
+        UserCreateRequest userCreateRequest = new UserCreateRequest("Bob", "Callahan", "TheBob", "bobCallahan@gmail.com", "password123");
         log.info("Initializing User with request: {}", userCreateRequest);
 
         userRepository.create(userCreateRequest);
 
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return userRepository.existsByUsername("TheBob");
     }
 
 }
