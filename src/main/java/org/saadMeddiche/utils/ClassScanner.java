@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClassScanner {
+
     public static List<Class<?>> findClassesByPackageAndAnnotation(String packageName, Class<? extends Annotation> annotationClass) {
         List<Class<?>> entities = new ArrayList<>();
 
@@ -24,4 +25,22 @@ public class ClassScanner {
         }
         return entities;
     }
+
+    public static List<Class<?>> findClassesByPackageAndInterface(String packageName, Class<?> interfaceClass) {
+        List<Class<?>> classes = new ArrayList<>();
+
+        try (ScanResult scanResult = new ClassGraph()
+                .enableClassInfo()
+                .acceptPackages(packageName)
+                .scan()) {
+
+            for (ClassInfo classInfo : scanResult.getClassesImplementing(interfaceClass.getName())) {
+                classes.add(classInfo.loadClass());
+            }
+
+        }
+
+        return classes;
+    }
+
 }
