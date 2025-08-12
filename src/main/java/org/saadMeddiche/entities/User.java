@@ -11,10 +11,10 @@ public class User {
     @DatabaseField(generatedId = true)
     public Long id;
 
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(canBeNull = false, columnName = "first_name")
     public String firstName;
 
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(canBeNull = false, columnName = "last_name")
     public String lastName;
 
     @DatabaseField(canBeNull = false, unique = true)
