@@ -54,4 +54,18 @@ public class UserSimpleRepository implements UserRepository {
 
     }
 
+    @Override
+    public boolean existsByUsername(String username) {
+
+        try (Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM public.user WHERE username = ?")) {
+
+            stmt.setString(1, username);
+            return stmt.executeQuery().next();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 }
