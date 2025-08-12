@@ -2,12 +2,16 @@ package org.saadMeddiche.controllers;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.validation.BodyValidator;
+import io.javalin.validation.ValidationError;
+import io.javalin.validation.Validator;
 import org.saadMeddiche.entities.ToDo;
 import org.saadMeddiche.requests.ToDoCreateRequest;
 import org.saadMeddiche.requests.ToDoUpdateRequest;
 import org.saadMeddiche.services.ToDoService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class ToDoController {
@@ -38,12 +42,16 @@ public class ToDoController {
     }
 
     public void createToDo(Context context) {
+
         ToDoCreateRequest createRequest = context.bodyValidator(ToDoCreateRequest.class)
-                        .check(request -> request.title() != null && !request.title().trim().isEmpty(),"NOT_EMPTY")
-                        .check(request -> request.description() != null && !request.description().trim().isEmpty(),"NOT_EMPTY")
+                        .check("title",request -> request.title() != null && !request.title().trim().isEmpty(),"NOT_EMPTY")
+                        .check("description",request -> request.description() != null && !request.description().trim().isEmpty(),"NOT_EMPTY")
                 .get();
+
         toDoService.create(createRequest);
+
         context.status(201);
+
     }
 
     public void updateToDo(Context context) {
