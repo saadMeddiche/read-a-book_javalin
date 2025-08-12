@@ -20,7 +20,9 @@ public class Main {
         main.setupEndpoints();
     }
 
-    private final Javalin app = Javalin.create().start(7070);
+    private final Javalin app = Javalin.create(javalinConfig -> {
+        javalinConfig.useVirtualThreads = true;
+    }).start(7070);
 
     public void setupDatabaseTable() throws SQLException {
         new TablesInitializer("org.saadMeddiche.entities");
