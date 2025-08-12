@@ -20,6 +20,6 @@ public class ToDo {
     public String description;
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
-    private User user;
+    public User user;
 
 }
