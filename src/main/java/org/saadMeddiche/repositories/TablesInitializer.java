@@ -1,10 +1,11 @@
 package org.saadMeddiche.repositories;
 
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.saadMeddiche.utils.ClassScanner;
 import org.saadMeddiche.utils.DatabaseConnectionProvider;
-import org.saadMeddiche.utils.OrmLiteEntityScanner;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class TablesInitializer {
         ConnectionSource connectionSource = DatabaseConnectionProvider.getConnectionSource();
 
         log.info("Scanning for entities in package: {}", entityPackage);
-        List<Class<?>> entities = OrmLiteEntityScanner.findEntities(entityPackage);
+        List<Class<?>> entities = ClassScanner.findClassesByPackageAndAnnotation(entityPackage, DatabaseTable.class);
 
         if (entities.isEmpty()) {
             log.warn("No entities found in package: {}", entityPackage);

@@ -1,15 +1,15 @@
 package org.saadMeddiche.utils;
 
-import com.j256.ormlite.table.DatabaseTable;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrmLiteEntityScanner {
-    public static List<Class<?>> findEntities(String packageName) {
+public class ClassScanner {
+    public static List<Class<?>> findClassesByPackageAndAnnotation(String packageName, Class<? extends Annotation> annotationClass) {
         List<Class<?>> entities = new ArrayList<>();
 
         try (ScanResult scanResult = new ClassGraph()
@@ -17,7 +17,7 @@ public class OrmLiteEntityScanner {
                 .acceptPackages(packageName)
                 .scan()) {
 
-            for (ClassInfo classInfo : scanResult.getClassesWithAnnotation(DatabaseTable.class)) {
+            for (ClassInfo classInfo : scanResult.getClassesWithAnnotation(annotationClass)) {
                 entities.add(classInfo.loadClass());
             }
 
