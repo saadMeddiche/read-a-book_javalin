@@ -38,8 +38,11 @@ public class ToDoController {
     }
 
     public void createToDo(Context context) {
-        ToDoCreateRequest request = context.bodyAsClass(ToDoCreateRequest.class);
-        toDoService.create(request);
+        ToDoCreateRequest createRequest = context.bodyValidator(ToDoCreateRequest.class)
+                        .check(request -> request.title() != null && !request.title().trim().isEmpty(),"NOT_EMPTY")
+                        .check(request -> request.description() != null && !request.description().trim().isEmpty(),"NOT_EMPTY")
+                .get();
+        toDoService.create(createRequest);
         context.status(201);
     }
 
