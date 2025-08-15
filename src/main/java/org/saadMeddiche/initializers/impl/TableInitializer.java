@@ -46,7 +46,7 @@ public class TableInitializer implements Initializable {
             return;
         }
 
-        log.info("Filtering entities that already have tables...");
+        log.info("Filtering {} entities that already have tables...", entities.size());
         List<Class<?>> filteredEntities = filterEntitiesThatAlreadyHaveTable(entities);
 
         if (filteredEntities.isEmpty()) {
@@ -79,10 +79,8 @@ public class TableInitializer implements Initializable {
         return filteredEntities;
     }
 
-    // TODO: FIX THE QUERY
-    private boolean isTableExists(String tableName) throws SQLException {
-        try(Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement ("SELECT 1 FROM ? LIMIT 1")) {
-            stmt.setString(1, tableName);
+    private boolean isTableExists(String tableName) {
+        try(Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement ("SELECT 1 FROM " + tableName + " LIMIT 1")) {
             return stmt.execute();
         } catch (SQLException e) {
             log.warn("Table {} does not exist: {}", tableName, e.getMessage());
