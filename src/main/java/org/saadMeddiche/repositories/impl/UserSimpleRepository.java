@@ -1,5 +1,6 @@
 package org.saadMeddiche.repositories.impl;
 
+import org.saadMeddiche.constants.Tables;
 import org.saadMeddiche.entities.User;
 import org.saadMeddiche.repositories.UserRepository;
 import org.saadMeddiche.requests.UserCreateRequest;
@@ -28,7 +29,7 @@ public class UserSimpleRepository implements UserRepository {
 
     @Override
     public void create(UserCreateRequest userCreateRequest) {
-        try (Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement("INSERT INTO public.user (first_name, last_name, username, email, password) VALUES (?, ?, ?, ?, ?)")) {
+        try (Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement("INSERT INTO " + Tables.USERS + " (first_name, last_name, username, email, password) VALUES (?, ?, ?, ?, ?)")) {
 
             stmt.setString(1, userCreateRequest.firstName());
             stmt.setString(2, userCreateRequest.lastName());
@@ -57,7 +58,7 @@ public class UserSimpleRepository implements UserRepository {
     @Override
     public boolean existsByUsername(String username) {
 
-        try (Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM public.user WHERE username = ?")) {
+        try (Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM " + Tables.USERS + " WHERE username = ?")) {
 
             stmt.setString(1, username);
             return stmt.executeQuery().next();

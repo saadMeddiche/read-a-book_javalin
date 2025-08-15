@@ -5,8 +5,9 @@ import com.j256.ormlite.table.DatabaseTable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.saadMeddiche.constants.Tables;
 
-@DatabaseTable(tableName = "todo")
+@DatabaseTable(tableName = Tables.TODOS)
 @Builder @NoArgsConstructor @AllArgsConstructor
 public class ToDo {
 
