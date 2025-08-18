@@ -26,4 +26,9 @@ public class UserInitializer implements Initializable {
         return userRepository.existsByUsername("TheBob");
     }
 
+    @Override
+    public int order() {
+        return 1;
+    }
+
 }
