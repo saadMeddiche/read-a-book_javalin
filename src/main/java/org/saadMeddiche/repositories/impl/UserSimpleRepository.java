@@ -9,6 +9,7 @@ import org.saadMeddiche.utils.DatabaseConnectionProvider;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -61,7 +62,13 @@ public class UserSimpleRepository implements UserRepository {
         try (Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(*) FROM " + Tables.USERS + " WHERE username = ?")) {
 
             stmt.setString(1, username);
-            return stmt.executeQuery().next();
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+
+            return false;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
