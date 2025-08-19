@@ -23,7 +23,7 @@ public class ToDoSimpleRepository implements ToDoRepository {
     @Override
     public Optional<ToDo> retrieveById(Long id) {
 
-        try (Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + Tables.TODOS +" WHERE id = ?")) {
+        try (Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT t.* , u.id as user_id, u.* FROM " + Tables.TODOS + " t JOIN " + Tables.USERS + " u on u.id = t.user_id WHERE t.id = ?")) {
             stmt.setLong(1, id);
 
             ResultSet rs = stmt.executeQuery();
@@ -110,6 +110,7 @@ public class ToDoSimpleRepository implements ToDoRepository {
                 .id(rs.getLong("id"))
                 .title(rs.getString("title"))
                 .description(rs.getString("description"))
+                .user(builderUser(rs))
                 .build();
     }
 
@@ -119,6 +120,17 @@ public class ToDoSimpleRepository implements ToDoRepository {
                 .title(rs.getString("title"))
                 .description(rs.getString("description"))
                 .userFullName(rs.getString("userFullName"))
+                .build();
+    }
+
+    private User builderUser(ResultSet rs) throws SQLException {
+        return User.builder()
+                .id(rs.getLong("user_id"))
+                .email(rs.getString("email"))
+                .firstName(rs.getString("first_name"))
+                .lastName(rs.getString("last_name"))
+                .username(rs.getString("username"))
+                .password("[PROTECTED]")
                 .build();
     }
 
