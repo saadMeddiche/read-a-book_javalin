@@ -6,10 +6,12 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import lombok.SneakyThrows;
 import org.saadMeddiche.entities.ToDo;
 import org.saadMeddiche.entities.User;
+import org.saadMeddiche.exceptions.AuthenticationException;
 import org.saadMeddiche.repositories.ToDoRepository;
 import org.saadMeddiche.requests.ToDoCreateRequest;
 import org.saadMeddiche.requests.ToDoUpdateRequest;
 import org.saadMeddiche.responses.ToDoResponse;
+import org.saadMeddiche.utils.CurrentAuthenticatedUser;
 import org.saadMeddiche.utils.DatabaseConnectionProvider;
 
 import java.sql.SQLException;
@@ -58,9 +60,13 @@ public class ToDoOrmLiteRepository implements ToDoRepository {
     @SneakyThrows
     public void create(ToDoCreateRequest toDoCreateRequest) {
 
+        User authenticatedUser = CurrentAuthenticatedUser.retrieve()
+                .orElseThrow(() -> new AuthenticationException("User not logged in"));
+
         ToDo toDo = ToDo.builder()
                 .title(toDoCreateRequest.title())
                 .description(toDoCreateRequest.description())
+                .user(authenticatedUser)
                 .build();
 
         todoDao.create(toDo);
