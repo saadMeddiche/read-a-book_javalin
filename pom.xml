@@ -52,6 +52,13 @@
             <version>42.7.7</version>
         </dependency>
 
+        <!-- DB Connection Pool -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
         <!--ORM Library-->
         <dependency>
             <groupId>com.j256.ormlite</groupId>
