@@ -4,9 +4,13 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.saadMeddiche.constants.Tables;
 
 @DatabaseTable(tableName = Tables.USERS)
+@Builder @NoArgsConstructor @AllArgsConstructor
 public class User {
 
     @DatabaseField(generatedId = true)
