@@ -1,6 +1,8 @@
 package org.saadMeddiche.repositories.impl;
 
 import org.saadMeddiche.entities.ToDo;
+import org.saadMeddiche.entities.User;
+import org.saadMeddiche.exceptions.AuthenticationException;
 import org.saadMeddiche.exceptions.NotFoundException;
 import org.saadMeddiche.repositories.ToDoRepository;
 import org.saadMeddiche.requests.ToDoCreateRequest;
@@ -45,11 +47,15 @@ public class ToDoMemoryRepository implements ToDoRepository {
     }
 
     public void create(ToDoCreateRequest toDoCreateRequest) {
+
+        User authenticatedUser = CurrentAuthenticatedUser.retrieve()
+                .orElseThrow(() -> new AuthenticationException("User is not authenticated"));
+
         ToDo toDo = new ToDo();
         toDo.id = (long) (toDos.size() + 1);
         toDo.title = toDoCreateRequest.title();
         toDo.description = toDoCreateRequest.description();
-        toDo.user = CurrentAuthenticatedUser.retrieve();
+        toDo.user = authenticatedUser;
         toDos.add(toDo);
     }
 
