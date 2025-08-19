@@ -1,19 +1,17 @@
 package org.saadMeddiche.utils;
 
 import org.saadMeddiche.entities.User;
+import org.saadMeddiche.repositories.UserRepository;
+import org.saadMeddiche.repositories.impl.UserSimpleRepository;
+
+import java.util.Optional;
 
 public class CurrentAuthenticatedUser {
 
     // This should be changed when implementing real authentication
-    public static User retrieve() {
-        User user = new User();
-        user.id = 1L;
-        user.firstName = "Bob";
-        user.lastName = "Callahan";
-        user.email = "BobCallahan@gmail.com";
-        user.username = "BobCallahan";
-        user.password = "[PROTECTED]";
-        return user;
+    public static Optional<User> retrieve() {
+        UserRepository userRepository = UserSimpleRepository.INSTANCE;
+        return userRepository.retrieveById(1L);
     }
 
 }
