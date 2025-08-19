@@ -2,10 +2,13 @@ package org.saadMeddiche.repositories.impl;
 
 import org.saadMeddiche.constants.Tables;
 import org.saadMeddiche.entities.ToDo;
+import org.saadMeddiche.entities.User;
+import org.saadMeddiche.exceptions.AuthenticationException;
 import org.saadMeddiche.repositories.ToDoRepository;
 import org.saadMeddiche.requests.ToDoCreateRequest;
 import org.saadMeddiche.requests.ToDoUpdateRequest;
 import org.saadMeddiche.responses.ToDoResponse;
+import org.saadMeddiche.utils.CurrentAuthenticatedUser;
 import org.saadMeddiche.utils.DatabaseConnectionProvider;
 
 import java.sql.*;
@@ -55,10 +58,15 @@ public class ToDoSimpleRepository implements ToDoRepository {
 
     @Override
     public void create(ToDoCreateRequest toDoCreateRequest) {
-        try (Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement("INSERT INTO " + Tables.TODOS + " (title, description) VALUES (?, ?)")) {
+
+        User authenticatedUser = CurrentAuthenticatedUser.retrieve()
+                .orElseThrow(() -> new AuthenticationException("User not logged in"));
+
+        try (Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement("INSERT INTO " + Tables.TODOS + " (title, description, user_id) VALUES (?, ?, ?)")) {
 
             stmt.setString(1, toDoCreateRequest.title());
             stmt.setString(2, toDoCreateRequest.description());
+            stmt.setLong(3, authenticatedUser.id);
 
             stmt.executeUpdate();
 
