@@ -43,7 +43,7 @@ public class ToDoSimpleRepository implements ToDoRepository {
     public List<ToDoResponse> retrieveAll() {
 
         List<ToDoResponse> toDoResponses = new ArrayList<>();
-        try (Connection conn = DatabaseConnectionProvider.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery("SELECT t.id, t.title, t.description, CONCAT(u.first_name , ' ', u.last_name) as userFullName FROM " + Tables.TODOS + " t LEFT JOIN " + Tables.TODOS + " u on u.id = t.user_id")) {
+        try (Connection conn = DatabaseConnectionProvider.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery("SELECT t.id, t.title, t.description, CONCAT(u.first_name , ' ', u.last_name) as userFullName FROM " + Tables.TODOS + " t LEFT JOIN " + Tables.USERS + " u on u.id = t.user_id")) {
 
             while (rs.next()) {
                 toDoResponses.add(builderToDoResponse(rs));
