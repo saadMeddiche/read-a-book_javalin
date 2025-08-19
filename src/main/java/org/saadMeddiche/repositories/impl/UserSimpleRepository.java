@@ -20,6 +20,19 @@ public class UserSimpleRepository implements UserRepository {
 
     @Override
     public Optional<User> retrieveById(Long id) {
+        try (Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + Tables.USERS +" WHERE id = ?")) {
+            stmt.setLong(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return Optional.of(builderToDo(rs));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         return Optional.empty();
     }
 
@@ -74,6 +87,17 @@ public class UserSimpleRepository implements UserRepository {
             throw new RuntimeException(e);
         }
 
+    }
+
+    private User builderToDo(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.id = rs.getLong("id");
+        user.firstName = rs.getString("first_name");
+        user.lastName = rs.getString("last_name");
+        user.username = rs.getString("username");
+        user.email = rs.getString("email");
+        user.password = "[PROTECTED]";
+        return user;
     }
 
 }
