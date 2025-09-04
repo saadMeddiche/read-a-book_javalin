@@ -1,4 +1,4 @@
-package org.saadMeddiche.controllers;
+package org.saadMeddiche.web.controllers;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;

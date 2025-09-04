@@ -1,4 +1,4 @@
-package org.saadMeddiche.controllers;
+package org.saadMeddiche.web.controllers;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -7,7 +7,6 @@ import org.saadMeddiche.requests.ToDoCreateRequest;
 import org.saadMeddiche.requests.ToDoUpdateRequest;
 import org.saadMeddiche.services.ToDoService;
 
-import java.util.List;
 import java.util.Optional;
 
 public class ToDoController {

@@ -2,8 +2,8 @@ package org.saadMeddiche.web;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import org.saadMeddiche.controllers.BookController;
-import org.saadMeddiche.controllers.ToDoController;
+import org.saadMeddiche.web.controllers.BookController;
+import org.saadMeddiche.web.controllers.ToDoController;
 
 public class JavalinApp {
 
