@@ -1,3 +1,5 @@
+name: read-a-book
+
 services:
 
   # PostgreSQL Database
@@ -7,7 +9,7 @@ services:
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=1234
-      - POSTGRES_DB=toDoUsingJavalin
+      - POSTGRES_DB=read-a-book
     volumes:
       - database_data:/var/lib/postgresql/data
     networks:
