@@ -1,31 +1,23 @@
 package org.saadMeddiche.entities;
 
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.saadMeddiche.constants.Tables;
 
-@DatabaseTable(tableName = Tables.BOOKS)
+@DatabaseTable(tableName = Tables.PARAGRAPHS)
 @Builder @NoArgsConstructor @AllArgsConstructor
-public class Book {
+public class Paragraph {
 
     @DatabaseField(generatedId = true)
     public Long id;
 
-    @DatabaseField(canBeNull = false, unique = true)
-    public String title;
-
     @DatabaseField(canBeNull = false)
-    public String author;
+    public String content;
 
-    @DatabaseField()
-    public String summary;
-
-    @ForeignCollectionField
-    private ForeignCollection<Chapter> chapters;
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    public Page page;
 
 }

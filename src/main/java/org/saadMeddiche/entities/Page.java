@@ -9,23 +9,17 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.saadMeddiche.constants.Tables;
 
-@DatabaseTable(tableName = Tables.BOOKS)
+@DatabaseTable(tableName = Tables.PAGES)
 @Builder @NoArgsConstructor @AllArgsConstructor
-public class Book {
+public class Page {
 
     @DatabaseField(generatedId = true)
     public Long id;
 
-    @DatabaseField(canBeNull = false, unique = true)
-    public String title;
-
-    @DatabaseField(canBeNull = false)
-    public String author;
-
-    @DatabaseField()
-    public String summary;
-
     @ForeignCollectionField
-    private ForeignCollection<Chapter> chapters;
+    private ForeignCollection<Paragraph> paragraphs;
+
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    public Chapter chapter;
 
 }
