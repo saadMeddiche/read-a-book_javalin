@@ -1,10 +1,8 @@
 package org.saadMeddiche;
 
-import io.javalin.Javalin;
 import lombok.extern.slf4j.Slf4j;
-import org.saadMeddiche.controllers.BookController;
-import org.saadMeddiche.controllers.ToDoController;
 import org.saadMeddiche.initializers.Launcher;
+import org.saadMeddiche.web.JavalinApp;
 
 import java.sql.SQLException;
 
@@ -16,17 +14,9 @@ public class Main {
         Launcher launcher = new Launcher();
         launcher.start();
 
-        Main main = new Main();
-        main.setupEndpoints();
-    }
+        JavalinApp javalinApp = new JavalinApp();
+        javalinApp.start();
 
-    private final Javalin app = Javalin.create(javalinConfig -> {
-        javalinConfig.useVirtualThreads = true;
-    }).start(7070);
-
-    public void setupEndpoints() {
-        new ToDoController(app);
-        new BookController(app);
     }
 
 }
