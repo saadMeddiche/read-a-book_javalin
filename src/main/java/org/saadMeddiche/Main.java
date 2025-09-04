@@ -2,6 +2,7 @@ package org.saadMeddiche;
 
 import lombok.extern.slf4j.Slf4j;
 import org.saadMeddiche.initializers.Launcher;
+import org.saadMeddiche.services.DataGenerationService;
 import org.saadMeddiche.web.JavalinApp;
 
 import java.sql.SQLException;
@@ -16,6 +17,9 @@ public class Main {
 
         JavalinApp javalinApp = new JavalinApp();
         javalinApp.start();
+
+        DataGenerationService dataGenerationService = new DataGenerationService();
+        dataGenerationService.generateData();
 
     }
 
