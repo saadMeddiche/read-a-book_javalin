@@ -16,13 +16,13 @@ public class Book {
     @DatabaseField(generatedId = true)
     public Long id;
 
-    @DatabaseField(canBeNull = false, unique = true)
+    @DatabaseField(canBeNull = false)
     public String title;
 
     @DatabaseField(canBeNull = false)
     public String author;
 
-    @DatabaseField()
+    @DatabaseField(columnDefinition = "VARCHAR(1000)")
     public String summary;
 
     @ForeignCollectionField
