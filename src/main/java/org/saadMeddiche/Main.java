@@ -2,6 +2,7 @@ package org.saadMeddiche;
 
 import io.javalin.Javalin;
 import lombok.extern.slf4j.Slf4j;
+import org.saadMeddiche.controllers.BookController;
 import org.saadMeddiche.controllers.ToDoController;
 import org.saadMeddiche.initializers.Launcher;
 
@@ -25,6 +26,7 @@ public class Main {
 
     public void setupEndpoints() {
         new ToDoController(app);
+        new BookController(app);
     }
 
 }
