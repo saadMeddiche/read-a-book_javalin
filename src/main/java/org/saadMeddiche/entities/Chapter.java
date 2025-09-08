@@ -16,7 +16,7 @@ public class Chapter {
     @DatabaseField(generatedId = true)
     public Long id;
 
-    @DatabaseField(canBeNull = false, unique = true)
+    @DatabaseField(canBeNull = false)
     public String title;
 
     @ForeignCollectionField
