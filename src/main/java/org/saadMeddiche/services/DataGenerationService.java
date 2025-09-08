@@ -164,7 +164,7 @@ public class DataGenerationService {
 
             for(int i = 0; i < PAGES_COUNT; i++) {
 
-                int paragraphNumberForPage = random.nextInt(PAGES_COUNT_RANGE.getFirst(), PAGES_COUNT_RANGE.getSecond() + 1);
+                int paragraphNumberForPage = random.nextInt(PARAGRAPHS_COUNT_RANGE.getFirst(), PARAGRAPHS_COUNT_RANGE.getSecond() + 1);
 
                 for(int j = 0; j < paragraphNumberForPage; j++) {
                     preparedStatement.setLong(1, PARAGRAPHS_ID_COUNT++);
