@@ -39,6 +39,11 @@ public class DataGenerationService {
         generatePages();
         log.info("Pages Generated in {}", new Date().getTime() - currentDate.getTime());
 
+        currentDate = new Date();
+        log.info("Generating Paragraphs...");
+        generateParagraphs();
+        log.info("Paragraphs Generated in {}", new Date().getTime() - currentDate.getTime());
+
     }
 
     private void generateBooks() {
@@ -128,6 +133,51 @@ public class DataGenerationService {
             }
 
             preparedStatement.executeLargeBatch();
+
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void generateParagraphs() {
+
+        int PAGES_COUNT = 0;
+
+        int PAGE_ID_COUNT = 1;
+
+        int PARAGRAPHS_ID_COUNT = 1;
+
+        String countQuery = "SELECT count(*) FROM "  + Tables.PAGES;
+        try(Connection connection = DatabaseConnectionProvider.getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(countQuery)) {
+
+            if(resultSet.next()) {
+                PAGES_COUNT = resultSet.getInt(1);
+            }
+
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        String insertQuery = "INSERT INTO " + Tables.PARAGRAPHS + " (id, content, page_id) VALUES (?, ?, ?)";
+        try(Connection connection = DatabaseConnectionProvider.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
+
+            for(int i = 0; i < PAGES_COUNT; i++) {
+
+                int paragraphNumberForPage = random.nextInt(PAGES_COUNT_RANGE.getFirst(), PAGES_COUNT_RANGE.getSecond() + 1);
+
+                for(int j = 0; j < paragraphNumberForPage; j++) {
+                    preparedStatement.setLong(1, PARAGRAPHS_ID_COUNT++);
+                    preparedStatement.setString(2, faker.lorem().sentence(20, 60));
+                    preparedStatement.setLong(3, PAGE_ID_COUNT);
+                    preparedStatement.addBatch();
+                }
+
+                PAGE_ID_COUNT++;
+
+            }
+
+            preparedStatement.executeBatch();
 
         } catch(SQLException e) {
             throw new RuntimeException(e);

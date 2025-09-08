@@ -14,7 +14,7 @@ public class Paragraph {
     @DatabaseField(generatedId = true)
     public Long id;
 
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(canBeNull = false, columnDefinition = "VARCHAR(1000)")
     public String content;
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
