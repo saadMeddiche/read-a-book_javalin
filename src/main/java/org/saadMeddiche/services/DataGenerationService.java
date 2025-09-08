@@ -16,9 +16,9 @@ public class DataGenerationService {
     private final Faker faker = new Faker();
     private final Random random = new Random();
 
-    private final int MAX_CHUNK_SIZE = 500_000;
+    private final int MAX_CHUNK_SIZE = 1_000_000;
 
-    private final int BOOK_COUNT = 100_000;
+    private final int BOOK_COUNT = 10_000;
     private final Pair<Integer,Integer> CHAPTERS_COUNT_RANGE = new Pair<>(2, 6);
     private final Pair<Integer,Integer> PAGES_COUNT_RANGE = new Pair<>(3, 5);
     private final Pair<Integer,Integer> PARAGRAPHS_COUNT_RANGE = new Pair<>(2, 7);
