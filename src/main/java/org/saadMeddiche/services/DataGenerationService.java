@@ -9,29 +9,34 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class DataGenerationService {
 
     private final Faker faker = new Faker();
-
     private final Random random = new Random();
 
-    private final int BOOK_COUNT = 16_383;
+    private final int PREPARED_STATEMENT_MAX_PARAMETERS = 65_535;
+
+    private final int BOOK_COUNT = 200_000;
+    private final int BOOK_PARAMETERS = 4;
+    private int BOOK_ID_COUNT = 1;
+
     private final Pair<Integer,Integer> CHAPTERS_COUNT_RANGE = new Pair<>(5, 20);
     private final Pair<Integer,Integer> PAGES_COUNT_RANGE = new Pair<>(10, 50);
     private final Pair<Integer,Integer> PARAGRAPHS_COUNT_RANGE = new Pair<>(3, 10);
 
     public void generateData() {
-        generateBooks();
+        generate(BOOK_PARAMETERS, BOOK_COUNT, this::generateBookChunk);
     }
 
-    private void generateBooks() {
+    private void generateBookChunk(int count) {
 
         StringBuilder queryBuilder = new StringBuilder("INSERT INTO " + Tables.BOOKS + " (id, title, author, summary) VALUES ");
 
-        for (int i = 1; i <= BOOK_COUNT; i++) {
+        for (int i = 1; i <= count; i++) {
 
-            if(i == BOOK_COUNT) {
+            if(i == count) {
                 queryBuilder.append("(?, ?, ?, ?);");
                 break;
             }
@@ -42,16 +47,34 @@ public class DataGenerationService {
 
         try (Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement(queryBuilder.toString())) {
 
-            for( int i = 0; i < BOOK_COUNT; i++) {
-                stmt.setLong(i * 4 + 1, i + 1);
-                stmt.setString(i * 4 + 2, faker.book().title());
-                stmt.setString(i * 4 + 3, faker.book().author());
-                stmt.setString(i * 4 + 4, faker.lorem().paragraph());
+            for( int i = 0; i < count; i++) {
+                stmt.setLong(i * BOOK_PARAMETERS + 1, BOOK_ID_COUNT++);
+                stmt.setString(i * BOOK_PARAMETERS + 2, faker.book().title());
+                stmt.setString(i * BOOK_PARAMETERS + 3, faker.book().author());
+                stmt.setString(i * BOOK_PARAMETERS + 4, faker.lorem().paragraph());
             }
 
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+
+    }
+
+    private void generate(int tableParameters, int dataCount, Consumer<Integer> generator) {
+
+        int chunkSize = PREPARED_STATEMENT_MAX_PARAMETERS / tableParameters;
+
+        int chunksCount = Math.max(1, dataCount / chunkSize);
+
+        for (int i = 0; i < chunksCount; i++) {
+            generator.accept(chunkSize);
+        }
+
+        int modulo = dataCount % chunkSize;
+
+        if(modulo != 0) {
+            generator.accept((modulo));
         }
 
     }
