@@ -50,17 +50,17 @@ public class DataGenerationService {
 
         int BOOK_ID_COUNT = 1;
 
-        try (Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement("INSERT INTO " + Tables.BOOKS + " (id, title, author, summary) VALUES (?, ?, ?, ?)")) {
+        try (Connection connection = DatabaseConnectionProvider.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + Tables.BOOKS + " (id, title, author, summary) VALUES (?, ?, ?, ?)")) {
 
             for( int i = 0; i < BOOK_COUNT; i++) {
-                stmt.setLong(1, BOOK_ID_COUNT++);
-                stmt.setString(2, faker.book().title());
-                stmt.setString(3, faker.book().author());
-                stmt.setString(4, faker.lorem().paragraph());
-                stmt.addBatch();
+                preparedStatement.setLong(1, BOOK_ID_COUNT++);
+                preparedStatement.setString(2, faker.book().title());
+                preparedStatement.setString(3, faker.book().author());
+                preparedStatement.setString(4, faker.lorem().paragraph());
+                preparedStatement.addBatch();
             }
 
-            stmt.executeBatch();
+            preparedStatement.executeBatch();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -73,24 +73,24 @@ public class DataGenerationService {
 
         int CHAPTER_ID_COUNT = 1;
 
-        try(Connection connection = DatabaseConnectionProvider.getConnection(); PreparedStatement statement = connection.prepareStatement("INSERT INTO " + Tables.CHAPTERS + " (id, title, book_id) VALUES (?, ?, ?)") ) {
+        try(Connection connection = DatabaseConnectionProvider.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + Tables.CHAPTERS + " (id, title, book_id) VALUES (?, ?, ?)") ) {
 
             for(int i = 0; i < BOOK_COUNT; i++) {
 
                 int chapterNumberForBook = random.nextInt(CHAPTERS_COUNT_RANGE.getFirst(), CHAPTERS_COUNT_RANGE.getSecond() + 1);
 
                 for(int j = 0; j < chapterNumberForBook; j++) {
-                    statement.setLong(1, CHAPTER_ID_COUNT++);
-                    statement.setString(2, faker.text().text(5, 15));
-                    statement.setLong(3, BOOK_ID_COUNT);
-                    statement.addBatch();
+                    preparedStatement.setLong(1, CHAPTER_ID_COUNT++);
+                    preparedStatement.setString(2, faker.text().text(5, 15));
+                    preparedStatement.setLong(3, BOOK_ID_COUNT);
+                    preparedStatement.addBatch();
                 }
 
                 BOOK_ID_COUNT++;
 
             }
 
-            statement.executeBatch();
+            preparedStatement.executeBatch();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
