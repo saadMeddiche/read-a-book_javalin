@@ -19,15 +19,32 @@ public class DataGenerationService {
     private final int PREPARED_STATEMENT_MAX_PARAMETERS = 65_535;
 
     private final int BOOK_COUNT = 200_000;
+
     private final int BOOK_PARAMETERS = 4;
     private int BOOK_ID_COUNT = 1;
+
+    private final int CHAPTER_PARAMETERS = 3;
+    private int CHAPTER_ID_COUNT = 1;
 
     private final Pair<Integer,Integer> CHAPTERS_COUNT_RANGE = new Pair<>(5, 20);
     private final Pair<Integer,Integer> PAGES_COUNT_RANGE = new Pair<>(10, 50);
     private final Pair<Integer,Integer> PARAGRAPHS_COUNT_RANGE = new Pair<>(3, 10);
 
     public void generateData() {
+        generateBooks();
+        generateChapters();
+    }
+
+    private void generateBooks() {
         generate(BOOK_PARAMETERS, BOOK_COUNT, this::generateBookChunk);
+    }
+
+    private void generateChapters() {
+
+        for (int i = 1; i <= BOOK_COUNT; i++) {
+            generateChapterChunk(random.nextInt(CHAPTERS_COUNT_RANGE.getFirst(), CHAPTERS_COUNT_RANGE.getSecond() + 1), i);
+        }
+
     }
 
     private void generateBookChunk(int count) {
@@ -46,6 +63,29 @@ public class DataGenerationService {
             }
 
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void generateChapterChunk(int count, int bookId) {
+
+        StringBuilder queryBuilder = new StringBuilder("INSERT INTO " + Tables.CHAPTERS + " (id, title, book_id) VALUES ");
+
+        appendParameterToQuery(queryBuilder, count, CHAPTER_PARAMETERS);
+
+        try(Connection connection = DatabaseConnectionProvider.getConnection(); PreparedStatement statement = connection.prepareStatement(queryBuilder.toString()) ) {
+
+            for(int i = 0; i < count; i++) {
+                statement.setLong(i * CHAPTER_PARAMETERS + 1, CHAPTER_ID_COUNT++);
+                statement.setString(i * CHAPTER_PARAMETERS + 2, faker.text().text(5, 15));
+                statement.setLong(i * CHAPTER_PARAMETERS + 3, bookId);
+
+            }
+
+            statement.execute();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
