@@ -34,16 +34,7 @@ public class DataGenerationService {
 
         StringBuilder queryBuilder = new StringBuilder("INSERT INTO " + Tables.BOOKS + " (id, title, author, summary) VALUES ");
 
-        for (int i = 1; i <= count; i++) {
-
-            if(i == count) {
-                queryBuilder.append("(?, ?, ?, ?);");
-                break;
-            }
-
-            queryBuilder.append("(?, ?, ?, ?), ");
-
-        }
+        appendParameterToQuery(queryBuilder, count, BOOK_PARAMETERS);
 
         try (Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement(queryBuilder.toString())) {
 
@@ -76,6 +67,24 @@ public class DataGenerationService {
         if(modulo != 0) {
             generator.accept((modulo));
         }
+
+    }
+
+    private void appendParameterToQuery(StringBuilder queryBuilder, int count, int parameters) {
+
+        StringBuilder parametersGroupsBuilder = new StringBuilder();
+
+        // Result (?,?,?,...)
+        String parametersGroups = parametersGroupsBuilder
+                .append("(")
+                .append("?,".repeat(parameters - 1)).append("?")
+                .append(")")
+                .toString();
+
+        // Repeat (?,?,?,...), (?,?,?,...), (?,?,?,...), ..., (?,?,?,...);
+        queryBuilder
+                .append((parametersGroups + ",").repeat(count - 1)).append(parametersGroups)
+                .append(";");
 
     }
 
