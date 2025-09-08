@@ -24,6 +24,9 @@ public class DataGenerationService {
     private final Pair<Integer,Integer> PARAGRAPHS_COUNT_RANGE = new Pair<>(2, 7);
 
     public void generateData() {
+
+        Date total = new Date();
+
         Date currentDate;
 
         currentDate = new Date();
@@ -45,6 +48,9 @@ public class DataGenerationService {
         log.info("Generating Paragraphs...");
         generateParagraphs();
         log.info("Paragraphs Generated in {}", new Date().getTime() - currentDate.getTime());
+
+        long totalTime = new Date().getTime() - total.getTime();
+        log.info("Total Time in seconds: {}", totalTime / 1000.0);
 
     }
 
