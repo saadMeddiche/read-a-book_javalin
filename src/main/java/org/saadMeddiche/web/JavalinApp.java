@@ -2,6 +2,7 @@ package org.saadMeddiche.web;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import org.saadMeddiche.configurations.WebAppConfiguration;
 import org.saadMeddiche.web.controllers.BookController;
 import org.saadMeddiche.web.controllers.ToDoController;
 
@@ -12,7 +13,7 @@ public class JavalinApp {
     public JavalinApp() {
         this.app = Javalin.create(config -> {
             config.useVirtualThreads = true;
-        }).start(7070);
+        }).start(WebAppConfiguration.INSTANCE.PORT);
     }
 
     public void start() {
@@ -31,14 +32,14 @@ public class JavalinApp {
     }
 
     private static void corsHeaders(Context ctx) {
-        ctx.header("Access-Control-Allow-Origin", "http://localhost:5173");
+        ctx.header("Access-Control-Allow-Origin", WebAppConfiguration.INSTANCE.ACCESS_CONTROL_ALLOW_ORIGIN);
         ctx.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         ctx.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
         ctx.header("Access-Control-Allow-Credentials", "true");
     }
 
     private static void corsHeadersOptions(Context ctx) {
-        ctx.header("Access-Control-Allow-Origin", "http://localhost:5173");
+        ctx.header("Access-Control-Allow-Origin", WebAppConfiguration.INSTANCE.ACCESS_CONTROL_ALLOW_ORIGIN);
         ctx.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         ctx.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
         ctx.header("Access-Control-Allow-Credentials", "true");
