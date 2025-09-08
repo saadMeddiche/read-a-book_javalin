@@ -1,6 +1,7 @@
 package org.saadMeddiche.services;
 
 import kotlin.Pair;
+import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.saadMeddiche.constants.Tables;
 import org.saadMeddiche.utils.DatabaseConnectionProvider;
@@ -11,6 +12,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Consumer;
 
+@Slf4j
 public class DataGenerationService {
 
     private final Faker faker = new Faker();
@@ -18,7 +20,7 @@ public class DataGenerationService {
 
     private final int PREPARED_STATEMENT_MAX_PARAMETERS = 65_535;
 
-    private final int BOOK_COUNT = 200_000;
+    private final int BOOK_COUNT = 10_000;
 
     private final int BOOK_PARAMETERS = 4;
     private int BOOK_ID_COUNT = 1;
@@ -26,13 +28,23 @@ public class DataGenerationService {
     private final int CHAPTER_PARAMETERS = 3;
     private int CHAPTER_ID_COUNT = 1;
 
-    private final Pair<Integer,Integer> CHAPTERS_COUNT_RANGE = new Pair<>(5, 20);
+    private final Pair<Integer,Integer> CHAPTERS_COUNT_RANGE = new Pair<>(20, 20);
     private final Pair<Integer,Integer> PAGES_COUNT_RANGE = new Pair<>(10, 50);
     private final Pair<Integer,Integer> PARAGRAPHS_COUNT_RANGE = new Pair<>(3, 10);
 
     public void generateData() {
+        Date currentDate;
+
+        currentDate = new Date();
+        log.info("Generating Books...");
         generateBooks();
+        log.info("Books Generated in {}", new Date().getTime() - currentDate.getTime());
+
+        currentDate = new Date();
+        log.info("Generating Chapters...");
         generateChapters();
+        log.info("Chapters Generated in {}", new Date().getTime() - currentDate.getTime());
+
     }
 
     private void generateBooks() {
@@ -41,8 +53,29 @@ public class DataGenerationService {
 
     private void generateChapters() {
 
-        for (int i = 1; i <= BOOK_COUNT; i++) {
-            generateChapterChunk(random.nextInt(CHAPTERS_COUNT_RANGE.getFirst(), CHAPTERS_COUNT_RANGE.getSecond() + 1), i);
+        int bookIdCount = 1;
+
+        try(Connection connection = DatabaseConnectionProvider.getConnection(); PreparedStatement statement = connection.prepareStatement("INSERT INTO " + Tables.CHAPTERS + " (id, title, book_id) VALUES (?, ?, ?)") ) {
+
+            for(int i = 0; i < BOOK_COUNT; i++) {
+
+                int chapterNumberForBook = random.nextInt(CHAPTERS_COUNT_RANGE.getFirst(), CHAPTERS_COUNT_RANGE.getSecond() + 1);
+
+                for(int j = 0; j < chapterNumberForBook; j++) {
+                    statement.setLong(1, CHAPTER_ID_COUNT++);
+                    statement.setString(2, faker.text().text(5, 15));
+                    statement.setLong(3, bookIdCount);
+                    statement.addBatch();
+                }
+
+                bookIdCount++;
+
+            }
+
+            statement.executeBatch();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
     }
