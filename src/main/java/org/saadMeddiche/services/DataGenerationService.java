@@ -16,7 +16,9 @@ public class DataGenerationService {
     private final Faker faker = new Faker();
     private final Random random = new Random();
 
-    private final int BOOK_COUNT = 10_000;
+    private final int MAX_CHUNK_SIZE = 500_000;
+
+    private final int BOOK_COUNT = 100_000;
     private final Pair<Integer,Integer> CHAPTERS_COUNT_RANGE = new Pair<>(2, 6);
     private final Pair<Integer,Integer> PAGES_COUNT_RANGE = new Pair<>(3, 5);
     private final Pair<Integer,Integer> PARAGRAPHS_COUNT_RANGE = new Pair<>(2, 7);
@@ -50,6 +52,8 @@ public class DataGenerationService {
 
         int BOOK_ID_COUNT = 1;
 
+        int CHUNK_SIZE_COUNT = 0;
+
         try (Connection connection = DatabaseConnectionProvider.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + Tables.BOOKS + " (id, title, author, summary) VALUES (?, ?, ?, ?)")) {
 
             for( int i = 0; i < BOOK_COUNT; i++) {
@@ -58,9 +62,15 @@ public class DataGenerationService {
                 preparedStatement.setString(3, faker.book().author());
                 preparedStatement.setString(4, faker.lorem().paragraph());
                 preparedStatement.addBatch();
+
+                if(++CHUNK_SIZE_COUNT % MAX_CHUNK_SIZE == 0) {
+                    preparedStatement.executeBatch();
+                }
+
             }
 
             preparedStatement.executeBatch();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -73,6 +83,8 @@ public class DataGenerationService {
 
         int CHAPTER_ID_COUNT = 1;
 
+        int CHUNK_SIZE_COUNT = 0;
+
         try(Connection connection = DatabaseConnectionProvider.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + Tables.CHAPTERS + " (id, title, book_id) VALUES (?, ?, ?)") ) {
 
             for(int i = 0; i < BOOK_COUNT; i++) {
@@ -84,6 +96,11 @@ public class DataGenerationService {
                     preparedStatement.setString(2, faker.text().text(5, 15));
                     preparedStatement.setLong(3, BOOK_ID_COUNT);
                     preparedStatement.addBatch();
+
+                    if(++CHUNK_SIZE_COUNT % MAX_CHUNK_SIZE == 0) {
+                        preparedStatement.executeBatch();
+                    }
+
                 }
 
                 BOOK_ID_COUNT++;
@@ -106,6 +123,8 @@ public class DataGenerationService {
 
         int PAGE_ID_COUNT = 1;
 
+        int CHUNK_SIZE_COUNT = 0;
+
         try(Connection connection = DatabaseConnectionProvider.getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery("SELECT count(*) FROM " + Tables.CHAPTERS)) {
 
             if(resultSet.next()) {
@@ -126,13 +145,18 @@ public class DataGenerationService {
                     preparedStatement.setLong(1, PAGE_ID_COUNT++);
                     preparedStatement.setLong(2, CHAPTER_ID_COUNT);
                     preparedStatement.addBatch();
+
+                    if(++CHUNK_SIZE_COUNT % MAX_CHUNK_SIZE == 0) {
+                        preparedStatement.executeBatch();
+                    }
+
                 }
 
                 CHAPTER_ID_COUNT++;
 
             }
 
-            preparedStatement.executeLargeBatch();
+            preparedStatement.executeBatch();
 
         } catch(SQLException e) {
             throw new RuntimeException(e);
@@ -147,6 +171,8 @@ public class DataGenerationService {
         int PAGE_ID_COUNT = 1;
 
         int PARAGRAPHS_ID_COUNT = 1;
+
+        int CHUNK_SIZE_COUNT = 0;
 
         String countQuery = "SELECT count(*) FROM "  + Tables.PAGES;
         try(Connection connection = DatabaseConnectionProvider.getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(countQuery)) {
@@ -171,6 +197,11 @@ public class DataGenerationService {
                     preparedStatement.setString(2, faker.lorem().sentence(20, 60));
                     preparedStatement.setLong(3, PAGE_ID_COUNT);
                     preparedStatement.addBatch();
+
+                    if(++CHUNK_SIZE_COUNT % MAX_CHUNK_SIZE == 0) {
+                        preparedStatement.executeBatch();
+                    }
+
                 }
 
                 PAGE_ID_COUNT++;
