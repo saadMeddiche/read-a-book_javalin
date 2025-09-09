@@ -23,7 +23,7 @@ public class BookController {
 
         long id = Long.parseLong(context.pathParam("id"));
 
-        Optional<BookDetailsResponse> bookDetailsResponse = bookService.getBookById(id);
+        Optional<BookDetailsResponse> bookDetailsResponse = bookService.getBookDetailsById(id);
 
         bookDetailsResponse.ifPresentOrElse((book -> context.status(200).json(book)), () -> context.status(404));
 

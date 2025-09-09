@@ -1,20 +1,15 @@
 package org.saadMeddiche.responses;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import lombok.AllArgsConstructor;
 
+import java.util.List;
+
+@AllArgsConstructor
 public class BookDetailsResponse  {
 
-    public Long id;
-    public String title;
-    public String author;
-    public String summary;
-
-    public BookDetailsResponse(ResultSet rs) throws SQLException {
-        this.id = rs.getLong("id");
-        this.title = rs.getString("title");
-        this.author = rs.getString("author");
-        this.summary = rs.getString("summary");
-    }
+    public BookResponse book;
+    public List<ChapterResponse> chapters;
+    public List<PageResponse> pages;
+    public List<ParagraphResponse> paragraphs;
 
 }
