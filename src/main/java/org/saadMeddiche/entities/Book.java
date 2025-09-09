@@ -25,6 +25,9 @@ public class Book {
     @DatabaseField(columnDefinition = "VARCHAR(1000)")
     public String summary;
 
+    @DatabaseField(columnDefinition = "BYTEA")
+    public byte[] coverImage;
+
     @ForeignCollectionField
     private ForeignCollection<Chapter> chapters;
 
