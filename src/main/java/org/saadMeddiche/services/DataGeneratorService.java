@@ -3,6 +3,7 @@ package org.saadMeddiche.services;
 import kotlin.Pair;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
+import org.saadMeddiche.configurations.DataGeneratorConfiguration;
 import org.saadMeddiche.constants.Tables;
 import org.saadMeddiche.utils.DatabaseConnectionProvider;
 
@@ -11,7 +12,7 @@ import java.util.*;
 import java.util.Date;
 
 @Slf4j
-public class DataGenerationService {
+public class DataGeneratorService {
 
     private final Faker faker = new Faker();
     private final Random random = new Random();
