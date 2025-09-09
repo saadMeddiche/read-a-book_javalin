@@ -19,7 +19,7 @@ public class Page {
     @ForeignCollectionField
     private ForeignCollection<Paragraph> paragraphs;
 
-    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, index = true)
     public Chapter chapter;
 
 }

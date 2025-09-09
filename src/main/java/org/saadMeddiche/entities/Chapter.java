@@ -22,7 +22,7 @@ public class Chapter {
     @ForeignCollectionField
     private ForeignCollection<Page> pages;
 
-    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, index = true)
     public Book book;
 
 }

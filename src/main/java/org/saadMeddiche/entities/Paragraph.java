@@ -17,7 +17,7 @@ public class Paragraph {
     @DatabaseField(canBeNull = false, columnDefinition = "VARCHAR(1000)")
     public String content;
 
-    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, index = true)
     public Page page;
 
 }
