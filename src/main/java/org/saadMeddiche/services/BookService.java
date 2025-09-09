@@ -22,29 +22,13 @@ public class BookService {
 
     public Optional<BookDetailsResponse> getBookDetailsById(long id) {
 
-        Optional<BookResponse> bookOpt = getBookById(id);
-        if (bookOpt.isEmpty()) {
-            return Optional.empty();
-        }
-
-        BookResponse book = bookOpt.get();
-        List<ChapterResponse> chapters = getChaptersByBookId(id);
-        List<PageResponse> pages = getPagesByBookId(id);
-        List<ParagraphResponse> paragraphs = getParagraphsByBookId(id);
-
-        BookDetailsResponse bookDetails = new BookDetailsResponse(book, chapters, pages, paragraphs);
-        return Optional.of(bookDetails);
-    }
-
-    private Optional<BookResponse> getBookById(Long id) {
-
         try (Connection conn = DatabaseConnectionProvider.getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + Tables.BOOKS + " WHERE id = ?")) {
             stmt.setLong(1, id);
 
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return Optional.of(new BookResponse(rs));
+                return Optional.of(new BookDetailsResponse(rs));
             }
 
         } catch (SQLException e) {
@@ -54,6 +38,7 @@ public class BookService {
 
         return Optional.empty();
     }
+
 
     private List<ChapterResponse> getChaptersByBookId(Long bookId) {
         List<ChapterResponse> chapters = new ArrayList<>();

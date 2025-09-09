@@ -18,8 +18,8 @@ public class Main {
         JavalinApp javalinApp = new JavalinApp();
         javalinApp.start();
 
-        DataGenerationService dataGenerationService = new DataGenerationService();
-        dataGenerationService.generateData();
+//        DataGenerationService dataGenerationService = new DataGenerationService();
+//        dataGenerationService.generateData();
 
     }
 
