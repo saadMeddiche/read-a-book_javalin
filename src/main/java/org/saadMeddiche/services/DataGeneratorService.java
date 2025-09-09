@@ -16,14 +16,19 @@ public class DataGenerationService {
     private final Faker faker = new Faker();
     private final Random random = new Random();
 
-    private final int MAX_CHUNK_SIZE = 1_000_000;
+    private final int MAX_CHUNK_SIZE = DataGeneratorConfiguration.INSTANCE.MAX_CHUNK_SIZE;
 
-    private final int BOOK_COUNT = 10_000;
-    private final Pair<Integer,Integer> CHAPTERS_COUNT_RANGE = new Pair<>(2, 6);
-    private final Pair<Integer,Integer> PAGES_COUNT_RANGE = new Pair<>(3, 5);
-    private final Pair<Integer,Integer> PARAGRAPHS_COUNT_RANGE = new Pair<>(2, 7);
+    private final int BOOK_COUNT = DataGeneratorConfiguration.INSTANCE.BOOK_COUNT;
+    private final Pair<Integer,Integer> CHAPTERS_COUNT_RANGE = DataGeneratorConfiguration.INSTANCE.CHAPTERS_COUNT_RANGE;
+    private final Pair<Integer,Integer> PAGES_COUNT_RANGE = DataGeneratorConfiguration.INSTANCE.PAGES_COUNT_RANGE;
+    private final Pair<Integer,Integer> PARAGRAPHS_COUNT_RANGE = DataGeneratorConfiguration.INSTANCE.PARAGRAPHS_COUNT_RANGE;
 
     public void generateData() {
+
+        if(!DataGeneratorConfiguration.INSTANCE.IS_ENABLED) {
+            log.info("Data Generator is disabled.");
+            return;
+        }
 
         Date total = new Date();
 
