@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.Date;
 
 @Slf4j
-public class DataGeneratorService {
+public class DataGeneratorService implements AutoCloseable {
 
     private final Faker faker = new Faker();
     private final Random random = new Random();
@@ -283,6 +283,11 @@ public class DataGeneratorService {
 
         }
 
+    }
+
+    @Override
+    public void close() {
+        System.gc();
     }
 
 }

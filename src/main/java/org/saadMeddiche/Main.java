@@ -20,6 +20,7 @@ public class Main {
 
         DataGeneratorService dataGenerationService = new DataGeneratorService();
         dataGenerationService.generateData();
+        dataGenerationService.close();
 
     }
 
