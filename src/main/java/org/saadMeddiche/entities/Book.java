@@ -26,7 +26,7 @@ public class Book {
     @DatabaseField(columnDefinition = "VARCHAR(1000)")
     public String summary;
 
-    @DatabaseField(dataType = DataType.BYTE_ARRAY)
+    @DatabaseField(dataType = DataType.BYTE_ARRAY,columnName = "cover_image")
     public byte[] coverImage;
 
     @ForeignCollectionField
