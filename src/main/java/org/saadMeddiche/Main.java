@@ -15,12 +15,12 @@ public class Main {
         Launcher launcher = new Launcher();
         launcher.start();
 
-        JavalinApp javalinApp = new JavalinApp();
-        javalinApp.start();
-
         DataGeneratorService dataGenerationService = new DataGeneratorService();
         dataGenerationService.generateData();
         dataGenerationService.close();
+
+        JavalinApp javalinApp = new JavalinApp();
+        javalinApp.start();
 
     }
 
