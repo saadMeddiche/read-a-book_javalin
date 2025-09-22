@@ -7,6 +7,12 @@ import org.saadMeddiche.configurations.DataGeneratorConfiguration;
 import org.saadMeddiche.constants.Tables;
 import org.saadMeddiche.utils.DatabaseConnectionProvider;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -66,13 +72,15 @@ public class DataGeneratorService {
 
         int CHUNK_SIZE_COUNT = 0;
 
-        try (Connection connection = DatabaseConnectionProvider.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + Tables.BOOKS + " (id, title, author, summary) VALUES (?, ?, ?, ?)")) {
+        try (Connection connection = DatabaseConnectionProvider.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + Tables.BOOKS + " (id, title, author, summary, cover_image) VALUES (?, ?, ?, ?, ?)")) {
 
             for( int i = 0; i < BOOK_COUNT; i++) {
+                String bookTitle = faker.book().title();
                 preparedStatement.setLong(1, BOOK_ID_COUNT++);
-                preparedStatement.setString(2, faker.book().title());
+                preparedStatement.setString(2, bookTitle);
                 preparedStatement.setString(3, faker.book().author());
                 preparedStatement.setString(4, faker.lorem().paragraph());
+                preparedStatement.setBinaryStream(5, this.generateBookCoverImage(bookTitle));
                 preparedStatement.addBatch();
 
                 if(++CHUNK_SIZE_COUNT % MAX_CHUNK_SIZE == 0) {
@@ -224,6 +232,55 @@ public class DataGeneratorService {
 
         } catch(SQLException e) {
             throw new RuntimeException(e);
+        }
+
+    }
+
+    private ByteArrayInputStream generateBookCoverImage(String bookTitle) {
+
+        // Define image dimensions
+        int width = 400;
+        int height = 300;
+        int x = 0, y = 0;
+
+        // Create a BufferedImage object
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        // Get the Graphics2D object to draw on the image
+        Graphics2D g2d = image.createGraphics();
+
+        // Fill the background with a color
+        g2d.setColor(Color.WHITE);
+        g2d.fillRect(x, y, width, height);
+
+        x = 50; y = 50;
+
+        // Draw a rectangle with a border
+        g2d.setColor(Color.BLUE);
+        g2d.fillRect(x, y, width - 2*x , height - 2*y);
+
+        g2d.setColor(Color.RED);
+        g2d.drawRect(x, y, width - 2*x , height - 2*y);
+
+        g2d.setColor(Color.WHITE);
+        g2d.drawString(bookTitle, width / 2 - g2d.getFontMetrics().stringWidth(bookTitle) / 2, height / 2);
+
+        // Dispose of the Graphics2D object
+        g2d.dispose();
+
+        // Transform the image into bytes
+        try(ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+
+            ImageIO.write(image, "png", outputStream);
+
+            outputStream.flush();
+
+            return new ByteArrayInputStream(outputStream.toByteArray());
+
+        } catch (IOException e) {
+            log.error("Error while writing image", e);
+            return new ByteArrayInputStream(new byte[0]);
+
         }
 
     }
